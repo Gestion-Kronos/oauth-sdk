@@ -16,6 +16,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "nesbot/carbon": "^3.7"
+        "nesbot/carbon": "^3.7",
+        "ext-curl": "*"
     }
 }

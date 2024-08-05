@@ -1,10 +1,10 @@
 <?php
 
-namespace Auth\Entities;
+namespace GestionKronos\Oauth\Auth\Entities;
 
-class AuthFlow
+enum AuthFlow: string
 {
-    const AUTH_CHALLENGE = 'AUTH_CHALLENGE';
-    const USER_PASSWORD = 'USER_PASSWORD';
-    const REFRESH = 'REFRESH';
+    case AUTH_CHALLENGE = 'AUTH_CHALLENGE';
+    case USER_PASSWORD = 'USER_PASSWORD';
+    case REFRESH = 'REFRESH';
 }

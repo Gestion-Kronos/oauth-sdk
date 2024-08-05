@@ -1,9 +1,9 @@
 <?php
 
-namespace Auth\Entities;
+namespace GestionKronos\Oauth\Auth\Entities;
 
-class GrantType
+enum GrantType: string
 {
-    const API = 'API';
-    const PERSONAL = 'PERSONAL';
+    case API = 'API';
+    case PERSONAL = 'PERSONAL';
 }

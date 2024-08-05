@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth;
+namespace GestionKronos\Oauth\Auth;
 
 use Carbon\Carbon;
 
