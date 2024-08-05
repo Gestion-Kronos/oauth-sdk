@@ -1,0 +1,21 @@
+{
+    "name": "gestion-kronos/oauth",
+    "description": "Gestion Kronos OAuth",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "GestionKronos\\Oauth\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "tatj91080100",
+            "email": "60717619+tatj91080100@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "nesbot/carbon": "^3.7"
+    }
+}
