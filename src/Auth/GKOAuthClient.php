@@ -86,7 +86,7 @@ class GKOAuthClient
             "callback_uri" => $this->callback_uri,
             "auth_parameters" => [
                 "secret_hash" => $secret_hash,
-                "grant_type" => $grant_type,
+                "grant_type" => $grant_type->value,
                 "challenge_response" => $challenge_response,
                 "username" => $username,
             ]
@@ -154,5 +154,56 @@ class GKOAuthClient
             'message' => 'AUTHENTICATION_SUCCESS',
             'description' => 'You have been successfully logged in. Welcome Back!',
         ]);
+    }
+
+    public function InitiatePasswordReset(
+        string $secret_hash,
+        string $username,
+    ) {
+        $auth_parameters = [
+            "client_id" => $this->client_id,
+            "pool_id" => $this->pool_id,
+            "callback_uri" => $this->callback_uri,
+            "auth_parameters" => [
+                "secret_hash" => $secret_hash,
+                "username" => $username,
+            ]
+        ];
+
+        if (!$username) {
+            return json_encode([
+                'message' => 'INVALID_OR_MISSING_FIELDS',
+                'description' => 'Invalid or missing form data. Please refer to api documentation for further instructions',
+            ]);
+        }
+
+        $auth_parameters['auth_parameters']['username'] = $username;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => 'http://127.0.0.1:8000/api/initiate-password-reset',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 100,
+            CURLOPT_TIMEOUT => 300,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => http_build_query($auth_parameters),
+            CURLOPT_HTTPHEADER => [
+                'Accept: application/json'
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return "cURL Error #: " . $err;
+        } else {
+            return json_decode($response, true);
+        }
     }
 }
