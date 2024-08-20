@@ -4,6 +4,7 @@ namespace GestionKronos\Oauth\Auth;
 
 use GestionKronos\Oauth\Auth\Entities\AuthFlow;
 use GestionKronos\Oauth\Auth\Entities\GrantType;
+use GestionKronos\Oauth\Auth\Helpers\Helper;
 
 class GKOAuthClient
 {
@@ -186,6 +187,63 @@ class GKOAuthClient
 
         curl_setopt_array($curl, [
             CURLOPT_URL => 'http://127.0.0.1:8000/api/initiate-password-reset',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 100,
+            CURLOPT_TIMEOUT => 300,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => http_build_query($auth_parameters),
+            CURLOPT_HTTPHEADER => [
+                'Accept: application/json'
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return "cURL Error #: " . $err;
+        } else {
+            return json_decode($response, true);
+        }
+    }
+
+    public function ManageDataEncryption(
+        string $secret_hash,
+        string $auth_flow,
+        string $data,
+        string|null $username = null,
+    ) {
+        $auth_parameters = [
+            "client_id" => $this->client_id,
+            "pool_id" => $this->pool_id,
+            "auth_flow" => $auth_flow,
+            "callback_uri" => $this->callback_uri,
+            "data" => $data,
+            "auth_parameters" => [
+                "secret_hash" => $secret_hash,
+                "username" => $username,
+            ]
+        ];
+
+        $route_prefix = Helper::GenerateRoutePrefixSecretHash(
+            $username,
+            $this->client_id,
+            $this->pool_id
+        );
+
+        $route = Helper::GenerateRouteSecretHash(
+            $username,
+            $this->pool_id
+        );
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => `http://127.0.0.1:8000/api/{$route_prefix}/{$route}`,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 100,
